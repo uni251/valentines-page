@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Love</title>
+    <style>
+        body {
+            background-color: #fde2e4;
+            font-family: 'Cursive', sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .letter {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: auto;
+        }
+        .heart {
+            color: red;
+            font-size: 24px;
+            animation: heartbeat 1.5s infinite;
+        }
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        .reveal-message {
+            display: none;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #d63384;
+        }
+        .button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            border: none;
+            background-color: #ff85a2;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <audio autoplay loop>
+        <source src="your-song.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    
+    <h1>💖 For My Love 💖</h1>
+    <div class="letter">
+        <p>My dearest,</p>
+        <p>You mean the world to me. Even though we're apart, my heart is always with you. 💕</p>
+        <p>Every moment spent with you is a treasure, and I can't wait until we're together again.</p>
+        <p class="heart">❤️</p>
+        <button class="button" onclick="revealMessage()">Click for a Surprise</button>
+        <p id="hidden-message" class="reveal-message">I love you more than words can say! 💖</p>
+    </div>
+    
+    <script>
+        function revealMessage() {
+            document.getElementById("hidden-message").style.display = "block";
+        }
+    </script>
+</body>
+</html>
