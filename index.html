@@ -47,9 +47,17 @@
     </style>
 </head>
 <body>
-    <audio controls>
-        <source src="https://uni251.github.io/valentines-page/Lovers%20Rock.mp3" type="audio/mpeg">
-    </audio>
+    <audio id="bg-music" autoplay loop muted>
+    <source src="https://uni251.github.io/valentines-page/Lovers%20Rock.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+    window.addEventListener('click', function() {
+        let audio = document.getElementById("bg-music");
+        audio.muted = false; // Unmute when user interacts
+        audio.play(); // Ensure it plays
+    }, { once: true }); // Runs only on the first click
+</script>
     
     <h1>💖 For greenham 💖</h1>
     <div class="letter">
