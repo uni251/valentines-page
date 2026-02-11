@@ -3,182 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>For My Love</title>
+    <title>My Love</title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@300;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --pastel-emerald: #a8d5ba; /* Soft, childish green */
-            --sultry-emerald: #2d5a4c; /* Deep, dark green for contrast */
+            --pastel-emerald: #a8d5ba;
+            --sultry-emerald: #1a3c31;
             --blush: #f4dada;
-            --champagne: #fdf5e6;
-            --rose-gold: #e5b3b3;
+            --text-color: #2d5a4c;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            /* A dreamy gradient background */
+            margin: 0; padding: 0; height: 100%;
             background: linear-gradient(135deg, var(--blush) 0%, var(--pastel-emerald) 100%);
             font-family: 'Quicksand', sans-serif;
-            color: var(--sultry-emerald);
+            color: var(--text-color);
             overflow: hidden;
         }
 
-        .container {
-            display: flex;
-            flex-direction: column;
+        .view {
+            display: none;
             height: 100vh;
-            padding: 20px;
-            text-align: center;
-        }
-
-        header {
-            flex: 0 0 20%;
-            display: flex;
+            padding: 30px;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow-y: auto;
+            animation: fadeIn 1s ease;
         }
 
-        h1 {
-            font-family: 'Dancing Script', cursive;
-            font-size: 2.8rem;
-            margin: 0;
-            color: var(--sultry-emerald);
-            text-shadow: 2px 2px 4px rgba(255,255,255,0.5);
-            line-height: 1.2;
+        .view.active { display: flex; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Wall of Text Styles */
+        .wall-of-text {
+            max-width: 500px;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            background: rgba(255, 255, 255, 0.3);
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+            margin-bottom: 20px;
         }
 
-        .subtitle {
-            font-size: 0.9rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            opacity: 0.7;
-            margin-top: 5px;
+        .btn {
+            background: var(--sultry-emerald);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            font-family: 'Quicksand', sans-serif;
         }
 
+        /* Grid Styles */
         .grid {
-            flex: 1;
             display: grid;
             grid-template-columns: 1fr 1fr;
             grid-template-rows: 1fr 1fr;
             gap: 15px;
-            margin: 20px 0;
+            width: 100%;
+            max-width: 400px;
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(10px); /* Glass effect */
-            border: 2px solid white;
-            border-radius: 30px; /* Super rounded/childish edges */
+            background: rgba(255, 255, 255, 0.5);
+            aspect-ratio: 1/1;
+            border-radius: 20px;
             display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            border: 2px solid white;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        /* Fullscreen Poem Modal */
+        #poem-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--sultry-emerald);
+            color: var(--blush);
+            z-index: 100;
+            padding: 40px 20px;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 15px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            text-align: center;
         }
 
-        /* Tapped State */
-        .card.active {
-            background: var(--sultry-emerald);
-            transform: scale(1.05);
-            z-index: 10;
-        }
+        #poem-modal.active { display: flex; }
 
-        .card.active h2 {
-            color: var(--blush);
-            font-size: 0.8rem;
-            margin-bottom: 5px;
-        }
-
-        .card h2 {
+        .poem-full-text {
             font-family: 'Dancing Script', cursive;
-            font-size: 2rem;
-            margin: 0;
-            color: var(--sultry-emerald);
-            transition: 0.3s;
+            font-size: 1.5rem;
+            line-height: 1.6;
+            white-space: pre-line; /* Keeps your line breaks */
         }
 
-        .poem-box {
-            display: none;
-            color: white;
-            font-size: 0.95rem;
-            line-height: 1.4;
-            font-weight: 500;
+        .close-btn {
+            margin-top: 30px;
+            color: var(--blush);
+            text-decoration: underline;
+            cursor: pointer;
         }
 
-        .card.active .poem-box {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        footer {
-            flex: 0 0 5%;
-            font-size: 0.8rem;
-            color: var(--sultry-emerald);
-            opacity: 0.6;
-        }
-
-        /* Decorative "Sultry" elements */
-        .heart {
-            color: #d68a8a;
-            font-size: 1.2rem;
-            margin-top: 10px;
+        #final-link {
+            display: none; /* Hidden until all 4 are read */
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <header>
-            <h1>My Four Reasons</h1>
-            <div class="subtitle">For My Favorite Person</div>
-            <div class="heart">♥</div>
-        </header>
+    <audio id="bg-music" loop>
+        <source src="YOUR_SONG_URL_HERE.mp3" type="audio/mpeg">
+    </audio>
 
-        <div class="grid">
-            <div class="card" onclick="this.classList.toggle('active')">
-                <h2>1</h2>
-                <div class="poem-box">
-                    Write your<br>first sweet<br>words right<br>here.
-                </div>
-            </div>
-
-            <div class="card" onclick="this.classList.toggle('active')">
-                <h2>2</h2>
-                <div class="poem-box">
-                    Write your<br>second sweet<br>words right<br>here.
-                </div>
-            </div>
-
-            <div class="card" onclick="this.classList.toggle('active')">
-                <h2>3</h2>
-                <div class="poem-box">
-                    Write your<br>third sweet<br>words right<br>here.
-                </div>
-            </div>
-
-            <div class="card" onclick="this.classList.toggle('active')">
-                <h2>4</h2>
-                <div class="poem-box">
-                    Write your<br>fourth sweet<br>words right<br>here.
-                </div>
-            </div>
+    <div id="view-intro" class="view active">
+        <h1 style="font-family: 'Dancing Script'; font-size: 3rem;">To My Dearest...</h1>
+        <div class="wall-of-text">
+            Insert your long intro letter here. 
+            Talk about how much you love her, why you made this, 
+            and how the number 4 holds so much meaning. 
+            Make it as long as you want!
         </div>
-
-        <footer>Happy Valentine's Day 2026</footer>
+        <button class="btn" onclick="startExperience()">Open My Heart</button>
     </div>
 
-</body>
-</html>
+    <div id="view-grid" class="view">
+        <h2 style="font-family: 'Dancing Script';">The Four Facets</h2>
+        <div class="grid">
+            <div class="card" onclick="openPoem(0)">1</div>
+            <div class="card" onclick="openPoem(1)">2</div>
+            <div class="card" onclick="openPoem(2)">3</div>
+            <div class="card" onclick="openPoem(3)">4</div>
+        </div>
+        <button id="final-link" class="btn" onclick="showView('view-final')">A Final Word</button>
+    </div>
+
+    <div id="view-final" class="view">
+        <h1 style="font-family: 'Dancing Script';">Forever Yours</h1>
+        <div class="wall-of-text">
+            This is your closing letter. 
+            The part where you finish everything off
