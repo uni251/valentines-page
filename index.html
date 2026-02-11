@@ -2,78 +2,167 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>For Riham</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For You</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:italic,wght@0,400;0,700&family=Montserrat:wght@300&display=swap" rel="stylesheet">
     <style>
-        body {
-            background-color: #fde2e4;
-            font-family: 'Cursive', sans-serif;
+        :root {
+            --emerald-dark: #022b1d;
+            --emerald-light: #043927;
+            --gold: #d4af37;
+            --text-white: #f0f0f0;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background-color: var(--emerald-dark);
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-white);
+            overflow: hidden; /* Prevents bouncing on mobile */
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            padding: 15px;
+        }
+
+        header {
             text-align: center;
-            padding: 20px;
+            flex: 0 0 10%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .letter {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
-            margin: auto;
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            letter-spacing: 5px;
+            color: var(--gold);
+            margin: 0;
         }
-        .heart {
-            color: red;
-            font-size: 24px;
-            animation: heartbeat 1.5s infinite;
+
+        .grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 12px;
+            margin: 15px 0;
         }
-        @keyframes heartbeat {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
+
+        .card {
+            background: linear-gradient(145deg, var(--emerald-light), var(--emerald-dark));
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
         }
-        .reveal-message {
-            display: none;
-            margin-top: 20px;
-            font-size: 18px;
-            color: #d63384;
+
+        /* Active State for Mobile Tap */
+        .card.active {
+            border-color: var(--gold);
+            background: var(--emerald-dark);
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
         }
-        .button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            border: none;
-            background-color: #ff85a2;
-            color: white;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
+
+        .card h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            margin: 0;
+            transition: 0.3s;
+        }
+
+        .card.active h2 {
+            transform: translateY(-10px);
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .poem-box {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.5s ease;
+            position: absolute;
+            width: 90%;
+            pointer-events: none;
+        }
+
+        .card.active .poem-box {
+            opacity: 1;
+            transform: translateY(15px);
+            position: relative;
+        }
+
+        .poem-text {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            font-style: italic;
+            color: var(--text-white);
+        }
+
+        footer {
+            flex: 0 0 5%;
+            text-align: center;
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--gold);
+            opacity: 0.8;
         }
     </style>
 </head>
 <body>
-    <audio id="bg-music" autoplay loop muted>
-    <source src="https://uni251.github.io/valentines-page/Lovers%20Rock.mp3" type="audio/mpeg">
-</audio>
 
-<script>
-    window.addEventListener('click', function() {
-        let audio = document.getElementById("bg-music");
-        audio.muted = false; // Unmute when user interacts
-        audio.play(); // Ensure it plays
-    }, { once: true }); // Runs only on the first click
-</script>
-    
-    <h1>💖For MY LOVEE!!💖</h1>
-    <div class="letter">
-        <p>HI HELLO!!!!</p>
-        <p>Omg this took me a while to make but umm i hope you like itt 💕</p>
-        <p>While making it i "created" new names for you cuz i had to find a way to debug it cuz the MUSIC wasn't working!!! 😡😡</p>
-        <p>So umm helloo beeham!! 😋😋🐝🐝 (i think it sounds cuteee)</p>
-        <p class="heart">❤️</p>
-        <button class="button" onclick="revealMessage()">Click here for a Surprise 😋 (turn your sound on)</button>
-        <p id="hidden-message" class="reveal-message">I LOVE YOUU!!!! 💖 HAPPY VALENTINES!! 💖</p>
+    <div class="container">
+        <header>
+            <h1>IV</h1>
+        </header>
+
+        <div class="grid">
+            <div class="card" onclick="this.classList.toggle('active')">
+                <h2>I</h2>
+                <div class="poem-box">
+                    <div class="poem-text">Your first<br>4-line poem<br>goes right<br>here.</div>
+                </div>
+            </div>
+
+            <div class="card" onclick="this.classList.toggle('active')">
+                <h2>II</h2>
+                <div class="poem-box">
+                    <div class="poem-text">Your second<br>4-line poem<br>goes right<br>here.</div>
+                </div>
+            </div>
+
+            <div class="card" onclick="this.classList.toggle('active')">
+                <h2>III</h2>
+                <div class="poem-box">
+                    <div class="poem-text">Your third<br>4-line poem<br>goes right<br>here.</div>
+                </div>
+            </div>
+
+            <div class="card" onclick="this.classList.toggle('active')">
+                <h2>IV</h2>
+                <div class="poem-box">
+                    <div class="poem-text">Your fourth<br>4-line poem<br>goes right<br>here.</div>
+                </div>
+            </div>
+        </div>
+
+        <footer>February 14, 2026</footer>
     </div>
-    
-    <script>
-        function revealMessage() {
-            document.getElementById("hidden-message").style.display = "block";
-        }
-    </script>
+
 </body>
 </html>
