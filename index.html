@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>My Love</title>
+    <title>For My Love</title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@300;500&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -11,6 +11,7 @@
             --sultry-emerald: #1a3c31;
             --blush: #f4dada;
             --text-color: #2d5a4c;
+            --gold: #d4af37;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -20,70 +21,86 @@
             background: linear-gradient(135deg, var(--blush) 0%, var(--pastel-emerald) 100%);
             font-family: 'Quicksand', sans-serif;
             color: var(--text-color);
-            overflow: hidden;
+            overflow-x: hidden;
         }
 
         .view {
             display: none;
-            height: 100vh;
-            padding: 30px;
+            min-height: 100vh;
+            padding: 40px 20px;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
-            overflow-y: auto;
-            animation: fadeIn 1s ease;
+            animation: fadeIn 0.8s ease-in-out;
         }
 
         .view.active { display: flex; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Wall of Text Styles */
         .wall-of-text {
-            max-width: 500px;
+            max-width: 600px;
             line-height: 1.8;
             font-size: 1.1rem;
-            background: rgba(255, 255, 255, 0.3);
-            padding: 30px;
-            border-radius: 20px;
-            backdrop-filter: blur(5px);
-            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.4);
+            padding: 25px;
+            border-radius: 25px;
+            backdrop-filter: blur(8px);
+            margin: 20px 0;
+            white-space: pre-line; /* Allows you to just press enter for new lines */
         }
 
         .btn {
             background: var(--sultry-emerald);
             color: white;
-            padding: 15px 30px;
+            padding: 18px 35px;
             border-radius: 50px;
             text-decoration: none;
             font-weight: bold;
             border: none;
             cursor: pointer;
-            font-family: 'Quicksand', sans-serif;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 10;
         }
 
-        /* Grid Styles */
+        /* The Pulsing Final Button */
+        #final-link {
+            display: none;
+            margin-top: 30px;
+            background: linear-gradient(45deg, var(--sultry-emerald), #2d5a4c);
+            animation: pulse-glow 2s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(26, 60, 49, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(26, 60, 49, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(26, 60, 49, 0); }
+        }
+
         .grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             grid-template-rows: 1fr 1fr;
             gap: 15px;
             width: 100%;
-            max-width: 400px;
+            max-width: 350px;
+            margin-top: 20px;
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.6);
             aspect-ratio: 1/1;
-            border-radius: 20px;
+            border-radius: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: 'Dancing Script', cursive;
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             border: 2px solid white;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            color: var(--sultry-emerald);
+            cursor: pointer;
         }
 
         /* Fullscreen Poem Modal */
@@ -93,55 +110,57 @@
             top: 0; left: 0; width: 100%; height: 100%;
             background: var(--sultry-emerald);
             color: var(--blush);
-            z-index: 100;
-            padding: 40px 20px;
+            z-index: 200;
+            padding: 40px 25px;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
+            overflow-y: auto;
         }
 
         #poem-modal.active { display: flex; }
 
         .poem-full-text {
             font-family: 'Dancing Script', cursive;
-            font-size: 1.5rem;
-            line-height: 1.6;
-            white-space: pre-line; /* Keeps your line breaks */
+            font-size: 1.8rem;
+            line-height: 1.4;
+            white-space: pre-line;
+            max-width: 800px;
         }
 
         .close-btn {
-            margin-top: 30px;
-            color: var(--blush);
-            text-decoration: underline;
-            cursor: pointer;
-        }
-
-        #final-link {
-            display: none; /* Hidden until all 4 are read */
-            margin-top: 20px;
+            margin-top: 40px;
+            font-family: 'Quicksand';
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.8rem;
+            opacity: 0.8;
+            border: 1px solid var(--blush);
+            padding: 10px 20px;
+            border-radius: 20px;
         }
     </style>
 </head>
 <body>
 
-    <audio id="bg-music" loop>
-        <source src="YOUR_SONG_URL_HERE.mp3" type="audio/mpeg">
+    <audio id="bg-music" loop preload="auto">
+        <source src="song.mp3" type="audio/mpeg">
     </audio>
 
     <div id="view-intro" class="view active">
-        <h1 style="font-family: 'Dancing Script'; font-size: 3rem;">To My Dearest...</h1>
+        <h1 style="font-family: 'Dancing Script'; font-size: 3.5rem; margin-bottom: 0;">My Love,</h1>
         <div class="wall-of-text">
-            Insert your long intro letter here. 
-            Talk about how much you love her, why you made this, 
-            and how the number 4 holds so much meaning. 
-            Make it as long as you want!
+            This is where your long, beautiful introduction goes. 
+            You can write paragraphs here. 
+            Talk about the memories that keep you up at night, 
+            the way she makes you feel, and why 4 is now your favorite number.
         </div>
         <button class="btn" onclick="startExperience()">Open My Heart</button>
     </div>
 
     <div id="view-grid" class="view">
-        <h2 style="font-family: 'Dancing Script';">The Four Facets</h2>
+        <h2 style="font-family: 'Dancing Script'; font-size: 2rem;">Four Parts of My Soul</h2>
         <div class="grid">
             <div class="card" onclick="openPoem(0)">1</div>
             <div class="card" onclick="openPoem(1)">2</div>
@@ -152,7 +171,57 @@
     </div>
 
     <div id="view-final" class="view">
-        <h1 style="font-family: 'Dancing Script';">Forever Yours</h1>
+        <h1 style="font-family: 'Dancing Script'; font-size: 3rem;">Forever</h1>
         <div class="wall-of-text">
-            This is your closing letter. 
-            The part where you finish everything off
+            This is your closing wall of text. 
+            End it with something powerful. 
+            Maybe a promise for the future.
+        </div>
+        <div style="font-size: 3rem; color: var(--sultry-emerald);">♥</div>
+    </div>
+
+    <div id="poem-modal">
+        <div id="poem-display" class="poem-full-text"></div>
+        <div class="close-btn" onclick="closePoem()">Close</div>
+    </div>
+
+    <script>
+        // ADD YOUR POEMS HERE
+        const poems = [
+            "Poem One:\nYour words here...",
+            "Poem Two:\nYour words here...",
+            "Poem Three:\nYour words here...",
+            "Poem Four:\nYour words here..."
+        ];
+
+        let readCount = new Set();
+        const music = document.getElementById('bg-music');
+
+        function showView(viewId) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            window.scrollTo(0,0);
+        }
+
+        function startExperience() {
+            // Try to play music
+            music.play().catch(e => console.log("Audio waiting for interaction"));
+            showView('view-grid');
+        }
+
+        function openPoem(index) {
+            document.getElementById('poem-display').innerText = poems[index];
+            document.getElementById('poem-modal').classList.add('active');
+            readCount.add(index);
+            
+            if (readCount.size === 4) {
+                document.getElementById('final-link').style.display = 'block';
+            }
+        }
+
+        function closePoem() {
+            document.getElementById('poem-modal').classList.remove('active');
+        }
+    </script>
+</body>
+</html>
