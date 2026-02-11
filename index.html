@@ -7,172 +7,221 @@
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@300;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --emerald: #a8d5ba;
-            --dark-emerald: #1a3c31;
+            --pastel-emerald: #a8d5ba;
+            --sultry-emerald: #1a3c31;
             --blush: #f4dada;
+            --text-color: #2d5a4c;
+            --gold: #d4af37;
         }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body, html {
             margin: 0; padding: 0; height: 100%;
-            background: linear-gradient(135deg, var(--blush) 0%, var(--emerald) 100%);
+            background: linear-gradient(135deg, var(--blush) 0%, var(--pastel-emerald) 100%);
             font-family: 'Quicksand', sans-serif;
-            color: var(--dark-emerald);
-            text-align: center;
+            color: var(--text-color);
+            overflow-x: hidden;
         }
 
-        .view { display: none; padding: 40px 20px; flex-direction: column; align-items: center; min-height: 100vh; }
-        .active { display: flex; }
+        .view {
+            display: none;
+            min-height: 100vh;
+            padding: 40px 20px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        .view.active { display: flex; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .wall-of-text {
-            max-width: 500px;
+            max-width: 600px;
+            line-height: 1.8;
+            font-size: 1.1rem;
             background: rgba(255, 255, 255, 0.4);
             padding: 25px;
             border-radius: 25px;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(8px);
             margin: 20px 0;
-            line-height: 1.6;
-            white-space: pre-line;
+            white-space: pre-line; /* Allows you to just press enter for new lines */
         }
 
         .btn {
-            background: var(--dark-emerald);
+            background: var(--sultry-emerald);
             color: white;
-            padding: 15px 30px;
+            padding: 18px 35px;
             border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
             border: none;
-            font-size: 1.1rem;
             cursor: pointer;
-            font-family: inherit;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+
+        /* The Pulsing Final Button */
+        #final-link {
+            display: none;
+            margin-top: 30px;
+            background: linear-gradient(45deg, var(--sultry-emerald), #2d5a4c);
+            animation: pulse-glow 2s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(26, 60, 49, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(26, 60, 49, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(26, 60, 49, 0); }
         }
 
         .grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
             gap: 15px;
+            width: 100%;
+            max-width: 350px;
             margin-top: 20px;
         }
 
         .card {
             background: rgba(255, 255, 255, 0.6);
-            width: 140px;
-            height: 140px;
-            border-radius: 25px;
+            aspect-ratio: 1/1;
+            border-radius: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: 'Dancing Script', cursive;
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             border: 2px solid white;
+            color: var(--sultry-emerald);
+            cursor: pointer;
         }
 
-        #modal {
+        /* Fullscreen Poem Modal */
+        #poem-modal {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--dark-emerald);
+            background: var(--sultry-emerald);
             color: var(--blush);
-            padding: 40px 20px;
-            justify-content: center;
+            z-index: 200;
+            padding: 40px 25px;
+            flex-direction: column;
             align-items: center;
-            z-index: 99;
+            justify-content: center;
+            text-align: center;
+            overflow-y: auto;
         }
 
-        #final-btn { 
-            display: none; 
-            margin-top: 30px; 
-            background: #d4af37; /* Gold */
-            animation: pulse 2s infinite;
+        #poem-modal.active { display: flex; }
+
+        .poem-full-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8rem;
+            line-height: 1.4;
+            white-space: pre-line;
+            max-width: 800px;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+        .close-btn {
+            margin-top: 40px;
+            font-family: 'Quicksand';
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.8rem;
+            opacity: 0.8;
+            border: 1px solid var(--blush);
+            padding: 10px 20px;
+            border-radius: 20px;
         }
     </style>
 </head>
 <body>
 
-    <audio id="bgMusic" loop>
+    <audio id="bg-music" loop preload="auto">
         <source src="song.mp3" type="audio/mpeg">
     </audio>
 
-    <div id="intro" class="view active">
-        <h1 style="font-family: 'Dancing Script'; font-size: 3rem;">My Love,</h1>
+    <div id="view-intro" class="view active">
+        <h1 style="font-family: 'Dancing Script'; font-size: 3.5rem; margin-bottom: 0;">My Love,</h1>
         <div class="wall-of-text">
             HEYYYYYYYYYYY RIHAMMMM
-I've been wanting to make something like this for valentines day and it took me a while to come up with something (and I've been busy a bit 😭). Consider this my revenge for what youu did on my birthdayy HEHEHEHEHHEHE. I kinda wanted to spill my heart and write poems for you at the same time so that's what I did!
-Hope you enjoy, love! 💖
+            I've been wanting to make something like this for valentines day and it took me a while to come up with something (and I've been busy a bit 😭).
+            Consider this my revenge for what youu did on my birthdayy HEHEHEHEHHEHE. I kinda wanted to spill my heart and write poems for you at the same time so that's what I did!
+            Hope you enjoy, love! 💖
         </div>
-        <button class="btn" onclick="openHeart()">Open My Heart</button>
+        <button class="btn" onclick="startExperience()">Open My Heart</button>
     </div>
 
-    <div id="grid-view" class="view">
-        <h2 style="font-family: 'Dancing Script';">The Four Reasons</h2>
+    <div id="view-grid" class="view">
+        <h2 style="font-family: 'Dancing Script'; font-size: 2rem;">Four Parts of My Soul</h2>
         <div class="grid">
-            <div class="card" onclick="showPoem(0)">1</div>
-            <div class="card" onclick="showPoem(1)">2</div>
-            <div class="card" onclick="showPoem(2)">3</div>
-            <div class="card" onclick="showPoem(3)">4</div>
+            <div class="card" onclick="openPoem(0)">1</div>
+            <div class="card" onclick="openPoem(1)">2</div>
+            <div class="card" onclick="openPoem(2)">3</div>
+            <div class="card" onclick="openPoem(3)">4</div>
         </div>
-        <button id="final-btn" class="btn" onclick="goFinal()">A Final Word</button>
+        <button id="final-link" class="btn" onclick="showView('view-final')">A Final Word</button>
     </div>
 
-    <div id="final-view" class="view">
-        <h1 style="font-family: 'Dancing Script'; font-size: 3rem;">Always</h1>
+    <div id="view-final" class="view">
+        <h1 style="font-family: 'Dancing Script'; font-size: 3rem;">Forever</h1>
         <div class="wall-of-text">
-            Your final wall of text here...
+            This is your closing wall of text. 
+            End it with something powerful. 
+            Maybe a promise for the future.
         </div>
+        <div style="font-size: 3rem; color: var(--sultry-emerald);">♥</div>
     </div>
 
-    <div id="modal" onclick="closePoem()">
-        <div id="poem-content" style="font-family: 'Dancing Script'; font-size: 1.8rem; white-space: pre-line;"></div>
+    <div id="poem-modal">
+        <div id="poem-display" class="poem-full-text"></div>
+        <div class="close-btn" onclick="closePoem()">Close</div>
     </div>
 
     <script>
+        // ADD YOUR POEMS HERE
         const poems = [
-            "Poem 1 text here...",
-            "Poem 2 text here...",
-            "Poem 3 text here...",
-            "Poem 4 text here..."
+            "Poem One:\nYour words here...",
+            "Poem Two:\nYour words here...",
+            "Poem Three:\nYour words here...",
+            "Poem Four:\nYour words here..."
         ];
 
-        let count = 0;
-        let seen = [false, false, false, false];
+        let readCount = new Set();
+        const music = document.getElementById('bg-music');
 
-        function openHeart() {
-            // PLAY AUDIO
-            const audio = document.getElementById('bgMusic');
-            audio.play();
-
-            // SWITCH VIEW
-            document.getElementById('intro').style.display = 'none';
-            document.getElementById('grid-view').style.display = 'flex';
+        function showView(viewId) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            window.scrollTo(0,0);
         }
 
-        function showPoem(index) {
-            document.getElementById('poem-content').innerText = poems[index];
-            document.getElementById('modal').style.display = 'flex';
-            
-            if(!seen[index]) {
-                seen[index] = true;
-                count++;
-            }
+        function startExperience() {
+            // Try to play music
+            music.play().catch(e => console.log("Audio waiting for interaction"));
+            showView('view-grid');
+        }
 
-            if(count === 4) {
-                document.getElementById('final-btn').style.display = 'block';
+        function openPoem(index) {
+            document.getElementById('poem-display').innerText = poems[index];
+            document.getElementById('poem-modal').classList.add('active');
+            readCount.add(index);
+            
+            if (readCount.size === 4) {
+                document.getElementById('final-link').style.display = 'block';
             }
         }
 
         function closePoem() {
-            document.getElementById('modal').style.display = 'none';
-        }
-
-        function goFinal() {
-            document.getElementById('grid-view').style.display = 'none';
-            document.getElementById('final-view').style.display = 'flex';
+            document.getElementById('poem-modal').classList.remove('active');
         }
     </script>
 </body>
 </html>
-
