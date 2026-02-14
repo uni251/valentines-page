@@ -104,6 +104,7 @@
         }
 
         /* Fullscreen Poem Modal */
+        /* Fullscreen Poem Modal - UPDATED for long text */
         #poem-modal {
             display: none;
             position: fixed;
@@ -111,12 +112,24 @@
             background: var(--sultry-emerald);
             color: var(--blush);
             z-index: 200;
-            padding: 40px 25px;
+            padding: 60px 25px; /* More top padding for the title */
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start; /* Start at top so you can scroll down */
             text-align: center;
-            overflow-y: auto;
+            overflow-y: auto; /* This enables scrolling */
+            -webkit-overflow-scrolling: touch; /* Smooth scroll for iPhones */
+        }
+
+        #poem-modal.active { display: flex; }
+
+        .poem-full-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.6rem; /* Slightly smaller font to fit more lines */
+            line-height: 1.6;
+            white-space: pre-line;
+            max-width: 800px;
+            margin-bottom: 40px; /* Space before the close button */
         }
 
         #poem-modal.active { display: flex; }
@@ -190,20 +203,72 @@
 
     <div id="poem-modal">
         <div id="poem-display" class="poem-full-text"></div>
-        <div class="close-btn" onclick="closePoem()">Close</div>
+        
+        <div id="explanation-display" style="display:none; font-family: 'Quicksand'; font-size: 1rem; line-height: 1.6; max-width: 500px; margin-bottom: 20px; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 15px;"></div>
+
+        <div style="display: flex; gap: 20px;">
+            <div class="close-btn" id="explain-btn" onclick="toggleExplanation()">Explanation</div>
+            <div class="close-btn" onclick="closePoem()">Close</div>
+        </div>
     </div>
 
     <script>
-        // ADD YOUR POEMS HERE
-        const poems = [
-            "Poem One:\nI would feel a very deep longing, \n A call that was tied to my soul, \n It was silent, consistent, pulsing, \n A calm and steady pull. \n\n  I saw it! Glowing so brightly! \n A deep forest light captured me tightly \n Entranced by the beauty, by the radiance, \n She was such a cutie, with such pleasance! \n\n How lucky can i be? \n With her face so pretty?! \n Her eyes like the sun, \n And she looks oh so fun! \n\n Oh gosh, to reminisce in such bliss, \n A truly special moment in time, \n Lost inside a sweet, dark abyss, \n For she is so profoundly sublime.",
-            "Poem Two:\nYour words here...",
-            "Poem Three:\nYour words here...",
-            "Poem Four:\nYour words here..."
+        // DATA STRUCTURE: [Poem Text, Explanation Text]
+        const poemData = [
+            [
+                "Soul call :\nI would feel a very deep longing, \n A call that was tied to my soul, \n It was silent, consistent, pulsing, \n A calm and steady pull. \n\n  I saw it! Glowing so brightly! \n A deep forest light captured me tightly \n Entranced by the beauty, by the radiance, \n She was such a cutie, with such pleasance! \n\n How lucky can i be? \n With her face so pretty?! \n Her eyes like the sun, \n And she looks oh so fun! \n\n Oh gosh, to reminisce in such bliss, \n A truly special moment in time, \n Lost inside a sweet, dark abyss, \n For she is so profoundly sublime.",,
+                "I added this explanation featuree to explainn what I meantt if somethingg had like multiple meaningss and stuff but I think this onee is pretty simple 😭 \n Obviouslyy it's all referencing youuu and especially like 'meeting you' or something like thatt \n There is twooo referencess thoo 'to reminisce in such bliss,' is referencing a Lady Brown, that onee nujabes songg idk if u knoww it. The second onee is abyss idkk i wanted to make it soundd like mysteriouss and stuff and i thought the first stranza of the poemm fits kindaa like the theme of made in abyss? Like the 'deep longing' the 'call that was tied to my soul' ykwimmm?"
+            ],
+            [
+                "Riham :\nWhen I think of the quiet that comes with the rain, \n I see your name etched on my windowpane, \n A gentle drizzle, a soft, steady stream, \n That flows through the center of every dream. \n\n When I see the brilliance that comes with the sun, \n I remember the splendor of your ravishing eyes, \n Your gorgeous hair, that charming yellow dress, \n I remember a gleeful torrent, that leaves me jubilated. \n\n When I walk through the green of a deep, silent wood, \n\n I feel your spirit in the roots where I’ve stood. \n\n Every leaf holds a droplet, a secret you’ve told, \n I feel a peaceful mist, one that makes me safe. \n\n You’ve built a home inside my restless head, \n Walking through my thoughts with a velvet tread. \n Four walls of you, surrounding every view, \n There is no 'me' that isn't drenched in 'you'.",
+                "OKAYYYY THIS ONE IS MORE COMPLICATEDD. Everytime the words mentioning rain, it's about you (drizzle, torrent, mist, etc...). It's basically kind of a follow up on the first one? It's like 3 things in nature that remind me of you alott and I tried to pick out like attributes about them and about you that are similar yknoww? The last stranza is the one that is different but it's like a recap of the three, a finisher of sorts. This one is more about wordplay, not that muchh rhyming only for the first and last kinda? OHHHH btw the 2nd stranza line 2 and 3 last words is 'eyes' 'dress' (yknowwwwwwww like the singer that made jealous, something about you, that guyyy). Ummm I thinkk thats all i have to sayy? I was happyyy with this one it was a bit more seriouss and like less childishh like the first onee? 😭 Tho i kinda like how simplee the first one iss"
+            ],
+            ["Poem Three text...", "Explanation for three..."],
+            ["Poem Four text...", "Explanation for four..."]
         ];
 
+        let currentPoemIndex = null;
         let readCount = new Set();
         const music = document.getElementById('bg-music');
+
+        function openPoem(index) {
+            currentPoemIndex = index;
+            document.getElementById('poem-display').innerText = poemData[index][0];
+            document.getElementById('explanation-display').innerText = poemData[index][1];
+            
+            // Reset modal state
+            document.getElementById('poem-display').style.display = 'block';
+            document.getElementById('explanation-display').style.display = 'none';
+            document.getElementById('explain-btn').innerText = "Explanation";
+            
+            document.getElementById('poem-modal').classList.add('active');
+            document.getElementById('poem-modal').scrollTop = 0;
+
+            readCount.add(index);
+            if (readCount.size === 4) {
+                document.getElementById('final-link').style.display = 'block';
+            }
+        }
+
+        function toggleExplanation() {
+            const p = document.getElementById('poem-display');
+            const e = document.getElementById('explanation-display');
+            const btn = document.getElementById('explain-btn');
+
+            if (e.style.display === 'none') {
+                p.style.display = 'none';
+                e.style.display = 'block';
+                btn.innerText = "Show Poem";
+            } else {
+                p.style.display = 'block';
+                e.style.display = 'none';
+                btn.innerText = "Explanation";
+            }
+        }
+
+        function closePoem() {
+            document.getElementById('poem-modal').classList.remove('active');
+        }
 
         function showView(viewId) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
@@ -212,26 +277,12 @@
         }
 
         function startExperience() {
-            // Try to play music
-            music.play().catch(e => console.log("Audio waiting for interaction"));
+            music.play().catch(e => console.log("Audio waiting"));
             showView('view-grid');
-        }
-
-        function openPoem(index) {
-            document.getElementById('poem-display').innerText = poems[index];
-            document.getElementById('poem-modal').classList.add('active');
-            readCount.add(index);
-            
-            if (readCount.size === 4) {
-                document.getElementById('final-link').style.display = 'block';
-            }
-        }
-
-        function closePoem() {
-            document.getElementById('poem-modal').classList.remove('active');
         }
     </script>
 </body>
 </html>
+
 
 
